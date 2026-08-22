@@ -1,0 +1,72 @@
+services:
+  monolith-db:
+    image: mysql:8.4
+    container_name: monolith-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ecommerce_core
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - monolith-db-data:/var/lib/mysql
+    networks:
+      - ecommerce-net
+
+  reviews-db:
+    image: mysql:8.4
+    container_name: reviews-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ecommerce_reviews
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
+    ports:
+      - "3307:3306"
+    volumes:
+      - reviews-db-data:/var/lib/mysql
+    networks:
+      - ecommerce-net
+
+  monolith:
+    build: ./monolith
+    container_name: monolith
+    restart: unless-stopped
+    depends_on:
+      - monolith-db
+    environment:
+      DB_HOST: monolith-db
+      DB_PORT: 3306
+      DB_NAME: ecommerce_core
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      JWT_SECRET: ${JWT_SECRET:-change-this-dev-only-secret-change-this-dev-only-secret}
+    ports:
+      - "8080:8080"
+    networks:
+      - ecommerce-net
+
+  reviews-service:
+    build: ./reviews-service
+    container_name: reviews-service
+    restart: unless-stopped
+    depends_on:
+      - reviews-db
+    environment:
+      DB_HOST: reviews-db
+      DB_PORT: 3306
+      DB_NAME: ecommerce_reviews
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      JWT_SECRET: ${JWT_SECRET:-change-this-dev-only-secret-change-this-dev-only-secret}
+    ports:
+      - "8082:8082"
+    networks:
+      - ecommerce-net
+
+networks:
+  ecommerce-net:
+    driver: bridge
+
+volumes:
+  monolith-db-data:
+  reviews-db-data:
