@@ -7,10 +7,10 @@ Trimmed-scope e-commerce project: one Spring Boot monolith (users/auth, products
 ## Structure
 - `/monolith` — Spring Boot app (port 8080)
 - `/reviews-service` — Spring Boot app (port 8082)
-- `/frontend` — React app (not yet scaffolded)
-- `docker-compose.yml` — runs all 4 containers (monolith, reviews-service, monolith-db, reviews-db)
+- `/frontend` — React (Vite) app, run locally with `npm run dev`, not containerized
+- `docker-compose.yml` — runs the 4 backend containers (monolith, reviews-service, monolith-db, reviews-db)
 
-## Running locally
+## Running the backend
 ```
 docker compose up --build
 ```
@@ -18,3 +18,11 @@ Monolith Swagger UI: http://localhost:8080/swagger-ui.html
 Reviews-service Swagger UI: http://localhost:8082/swagger-ui.html
 
 Copy `.env.example` to `.env` and adjust `DB_PASSWORD` / `JWT_SECRET` before running in any shared/non-local environment.
+
+## Running the frontend
+```
+cd frontend
+npm install
+npm run dev
+```
+Opens at http://localhost:5173. Copy `frontend/.env.example` to `frontend/.env` if the backend isn't on the default ports (`8081`/`8082` locally, since 8080/3306 are commonly already in use on dev machines — see `docker-compose.yml` port mappings).
