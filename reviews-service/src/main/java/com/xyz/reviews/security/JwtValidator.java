@@ -1,4 +1,4 @@
-package com.xyz.ecommerce.auth;
+package com.xyz.reviews.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,33 +10,17 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+/**
+ * Validates JWTs issued by the monolith using the shared signing secret.
+ * This service does not issue tokens or implement login of its own.
+ */
 @Service
-public class JwtService {
+public class JwtValidator {
 
     private final SecretKey key;
-    private final long expirationMs;
 
-    public JwtService(@Value("${jwt.secret}") String secret,
-                       @Value("${jwt.expiration-ms}") long expirationMs) {
+    public JwtValidator(@Value("${jwt.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.expirationMs = expirationMs;
-    }
-
-    public String generateToken(String subjectEmail, Long userId, String role) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + expirationMs);
-        return Jwts.builder()
-                .subject(subjectEmail)
-                .claim("userId", userId)
-                .claim("role", role)
-                .issuedAt(now)
-                .expiration(expiry)
-                .signWith(key)
-                .compact();
-    }
-
-    public String extractEmail(String token) {
-        return parseClaims(token).getSubject();
     }
 
     public boolean isTokenValid(String token) {
@@ -46,6 +30,17 @@ public class JwtService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Long extractUserId(String token) {
+        Object userId = parseClaims(token).get("userId");
+        if (userId instanceof Integer i) {
+            return i.longValue();
+        }
+        if (userId instanceof Long l) {
+            return l;
+        }
+        return Long.valueOf(userId.toString());
     }
 
     private Claims parseClaims(String token) {

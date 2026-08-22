@@ -76,6 +76,12 @@ public class OrderService {
                 .toList();
     }
 
+    public List<OrderResponse> getAllOrders() {
+        return orderRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public OrderResponse getOrder(Long id, Long userId, boolean isAdmin) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));

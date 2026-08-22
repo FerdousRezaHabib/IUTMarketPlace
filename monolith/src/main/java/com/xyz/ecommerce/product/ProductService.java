@@ -12,6 +12,7 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ReviewsClient reviewsClient;
 
     public List<Product> list(String category, String sort) {
         boolean hasCategory = category != null && !category.isBlank();
@@ -39,6 +40,22 @@ public class ProductService {
     public Product get(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+    }
+
+    public ProductDetailResponse getDetail(Long id) {
+        Product product = get(id);
+        ProductReviewsSummary reviewsSummary = reviewsClient.getReviewsForProduct(id);
+        return new ProductDetailResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getCategory(),
+                product.getImageUrl(),
+                product.getStockQuantity(),
+                reviewsSummary.reviews(),
+                reviewsSummary.averageRating()
+        );
     }
 
     public Product create(ProductRequest request) {
