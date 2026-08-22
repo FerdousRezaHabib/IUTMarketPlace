@@ -7,7 +7,7 @@ services:
       MYSQL_DATABASE: ecommerce_core
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
     ports:
-      - "3306:3306"
+      - "3309:3306"
     volumes:
       - monolith-db-data:/var/lib/mysql
     networks:
@@ -21,7 +21,7 @@ services:
       MYSQL_DATABASE: ecommerce_reviews
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-password}
     ports:
-      - "3307:3306"
+      - "3308:3306"
     volumes:
       - reviews-db-data:/var/lib/mysql
     networks:
@@ -41,7 +41,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-password}
       JWT_SECRET: ${JWT_SECRET:-change-this-dev-only-secret-change-this-dev-only-secret}
     ports:
-      - "8080:8080"
+      - "8081:8080"
     networks:
       - ecommerce-net
 
