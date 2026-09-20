@@ -19,14 +19,14 @@ export default function Navbar() {
     <header className="border-b border-gray-200 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link to="/" className="text-lg font-semibold tracking-tight text-gray-900">
-          E-Commerce
+          <span className="text-accent">IUT</span>MarketPlace
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-gray-700 md:flex">
           <Link to="/" className="hover:text-accent transition-colors">
             Products
           </Link>
-          {user && (
+          {user && !isAdmin && (
             <Link to="/orders" className="hover:text-accent transition-colors">
               Orders
             </Link>
@@ -94,7 +94,7 @@ export default function Navbar() {
                 Cart ({count})
               </Link>
             )}
-            {user && (
+            {user && !isAdmin && (
               <Link to="/orders" onClick={() => setMenuOpen(false)}>
                 Orders
               </Link>

@@ -8,7 +8,7 @@ import { useCart } from "../context/CartContext";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { addItem } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -107,17 +107,18 @@ export default function ProductDetailPage() {
             </span>
           )}
 
-          {user ? (
-            <button
-              onClick={handleAddToCart}
-              disabled={outOfStock || addingToCart}
-              className="mt-2 w-fit rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {addingToCart ? "Adding..." : "Add to cart"}
-            </button>
-          ) : (
-            <p className="text-sm text-gray-500">Log in to add this to your cart.</p>
-          )}
+          {!isAdmin &&
+            (user ? (
+              <button
+                onClick={handleAddToCart}
+                disabled={outOfStock || addingToCart}
+                className="mt-2 w-fit rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {addingToCart ? "Adding..." : "Add to cart"}
+              </button>
+            ) : (
+              <p className="text-sm text-gray-500">Log in to add this to your cart.</p>
+            ))}
           {cartMessage && <p className="text-sm text-gray-600">{cartMessage}</p>}
         </div>
       </div>
@@ -145,7 +146,7 @@ export default function ProductDetailPage() {
           ))}
         </div>
 
-        {user && (
+        {user && !isAdmin && (
           <form onSubmit={handleSubmitReview} className="mt-8 flex flex-col gap-3">
             <h3 className="text-sm font-medium text-gray-900">Leave a review</h3>
             <select

@@ -29,7 +29,10 @@ export default function ProductListPage() {
     };
   }, [category, sort]);
 
-  const categories = [...new Set(products.map((p) => p.category))];
+  const hiddenCategories = ["cosmetics", "electronics"];
+  const categories = [...new Set(products.map((p) => p.category))].filter(
+    (c) => !hiddenCategories.includes(c)
+  );
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
