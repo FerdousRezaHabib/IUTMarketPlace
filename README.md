@@ -483,11 +483,3 @@ This is an academic project with deliberately trimmed scope. These are known tra
 - **Minimal automated tests.** Only Spring context-load tests exist so far.
 
 ---
-
-## Team
-
-| Name | Student ID |
-|---|---|
-| A K M Ferdous Reza Habib | 220041138 |
-| Shadab Bin Habib | 220041201 |
-| Isfak Iqbal Chowdhury | 220041213 |
